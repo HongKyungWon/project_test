@@ -1,0 +1,44 @@
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type Query{
+    listCustomer: [Customer]
+}
+
+type Mutation {
+    createCustomer(input: CustomerInput): Customer
+    deleteCustomer(input: CustomerInput): Customer
+    updateCustomer(input: CustomerInput): Customer
+}
+
+type Customer {
+    customerId: ID!
+    img: String
+    name: String
+    birthday: String
+    gender: String
+    job: String
+}
+
+input CustomerInput {
+    img: String
+    name: String
+    birthday: String
+    gender: String
+    job: String
+}
+
+input deleteCustomerInput {
+    customerId: ID!
+}
+
+input updateCustomerInput {
+    customerId: ID!
+    img: String
+    name: String
+    birthday: String
+    gender: String
+    job: String
+}

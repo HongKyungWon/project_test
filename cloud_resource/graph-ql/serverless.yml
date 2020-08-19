@@ -1,0 +1,63 @@
+service: "customer-api"
+
+provider:
+  name: aws
+  runtime: python3.7
+
+plugins:
+  - serverless-appsync-plugin
+
+custom:
+  appSync:
+    name: customer-api
+    authenticationType: API_KEY
+    mappingTemplatesLocation: mapping-templates
+    schema: 
+      - schema.graphql
+    dataSources:
+      - type: AMAZON_DYNAMODB
+        name: customerTable
+        config:
+          tableName: customerTable
+
+
+    mappingTemplates:
+      - dataSource: customerTable
+        type: Query 
+        field: listCustomer
+        request: list_customer/Customer.listCustomer.request.vtl
+        response: list_customer/Customer.listCustomer.response.vtl
+
+      - dataSource: customerTable
+        type: Mutation 
+        field: createCustomer
+        request: put_customer/Customer.createCustomer.request.vtl
+        response: put_customer/Customer.createCustomer.response.vtl
+
+      - dataSource: customerTable
+        type: Mutation 
+        field: updateCustomer
+        request: update_customer/Customer.updateCustomer.request.vtl
+        response: update_customer/Customer.updateCustomer.response.vtl
+
+      - dataSource: customerTable
+        type: Mutation 
+        field: deleteCustomer
+        request: delete_customer/Customer.deleteCustomer.request.vtl
+        response: delete_customer/Customer.deleteCustomer.response.vtl
+
+resources:
+  Resources:
+    postTable: # name of the resource to be use later
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: customerTable # name of the table
+        AttributeDefinitions:
+          - AttributeName: customerId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: customerId # partition key
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1

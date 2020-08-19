@@ -1,0 +1,14 @@
+{
+  "version" : "2017-02-28",
+  "operation" : "UpdateItem",
+  "key" : {
+    "customerId": $util.dynamodb.toDynamoDBJson($ctx.args.input['customerId']),
+  },
+  "update" : {
+        "expression" : "SET textTodo = :t, updatedAt = :u",
+        "expressionValues" : {
+            ":t" : { "S" : $util.toJson($ctx.args.input.textTodo) },
+            ":u" : { "S" : $util.toJson($util.time.nowISO8601())}
+    }
+  }
+}
